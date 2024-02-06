@@ -14,10 +14,10 @@ M.options = {
 function M.action(selected_option)
   local utils = require("compiler.utils")
   local overseer = require("overseer")
-  local entry_point = utils.os_path(vim.fn.getcwd() .. "/main.cpp")          -- working_directory/main.cpp
+  local entry_point = utils.os_path(vim.fn.getcwd() .. "\main.cpp")          -- working_directory/main.cpp
   local files = utils.find_files_to_compile(entry_point, "*.cpp")            -- *.cpp files under entry_point_dir (recursively)
-  local output_dir = utils.os_path(vim.fn.getcwd() .. "/bin/")               -- working_directory/bin/
-  local output = utils.os_path(vim.fn.getcwd() .. "/bin/program")            -- working_directory/bin/program
+  local output_dir = utils.os_path(vim.fn.getcwd() .. "\bin\")               -- working_directory/bin/
+  local output = utils.os_path(vim.fn.getcwd() .. "\bin\program")            -- working_directory/bin/program
   local arguments = "-Wall -g"                                               -- arguments can be overriden in .solution
   local final_message = "--task finished--"
 
@@ -26,7 +26,7 @@ function M.action(selected_option)
       name = "- C++ compiler",
       strategy = { "orchestrator",
         tasks = {{ "shell", name = "- Build & run program → " .. entry_point,
-          cmd = "rm -f " .. output .. " || true" ..                                   -- clean
+          cmd = "del " .. output .. " || true" ..                                   -- clean
                 " && mkdir -p " .. output_dir ..                                      -- mkdir
                 " && g++ " .. files .. " -o " .. output .. " " .. arguments ..        -- compile
                 " && " .. output ..                                                   -- run
@@ -40,7 +40,7 @@ function M.action(selected_option)
       name = "- C++ compiler",
       strategy = { "orchestrator",
         tasks = {{ "shell", name = "- Build program → " .. entry_point,
-          cmd = "rm -f " .. output ..  " || true" ..                                  -- clean
+          cmd = "del " .. output ..  " || true" ..                                  -- clean
                 " && mkdir -p " .. output_dir ..                                      -- mkdir
                 " && g++ " .. files .. " -o " .. output .. " " .. arguments ..        -- compile
                 " && echo " .. entry_point ..                                         -- echo
@@ -78,7 +78,7 @@ function M.action(selected_option)
         output_dir = utils.os_path(output:match("^(.-[/\\])[^/\\]*$"))
         arguments = variables.arguments or arguments -- optional
         task = { "shell", name = "- Build program → " .. entry_point,
-          cmd = "rm -f " .. output ..  " || true" ..                                  -- clean
+          cmd = "del " .. output ..  " || true" ..                                  -- clean
                 " && mkdir -p " .. output_dir ..                                      -- mkdir
                 " && g++ " .. files .. " -o " .. output .. " " .. arguments ..        -- compile
                 " && echo " .. entry_point ..                                         -- echo
@@ -119,7 +119,7 @@ function M.action(selected_option)
         output_dir = utils.os_path(entry_point:match("^(.-[/\\])[^/\\]*$") .. "bin")  -- entry_point/bin
         output = utils.os_path(output_dir .. "/program")                              -- entry_point/bin/program
         task = { "shell", name = "- Build program → " .. entry_point,
-          cmd = "rm -f " .. output ..  " || true" ..                                 -- clean
+          cmd = "del " .. output ..  " || true" ..                                 -- clean
                 " && mkdir -p " .. output_dir ..                                     -- mkdir
                 " && g++ " .. files .. " -o " .. output .. " " .. arguments ..       -- compile
                 " && echo " .. entry_point ..                                        -- echo
